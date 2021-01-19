@@ -1,6 +1,3 @@
-#// Sans utiliser Internet
-#// "//" car c'est une habitude :D
-
 #//Variables
 sprite = game.create_sprite(2, 2)
 life = 5
@@ -27,7 +24,7 @@ basic.forever(on_forever)
 
 """
 /*
-* Tourner lorsque le micro:bit est secoué et indiquer la direction
+* Turn when the micro:bit is shaken and show the direction
 /*
 """
 def on_gesture_shake():
@@ -48,7 +45,7 @@ input.on_gesture(Gesture.TILT_RIGHT, goRight)
 
 """
 /*
-* Lorsque le bouton A est appuyé, bouger de 1
+* When the A button is pressed, check if the game is paused, if it's not then move
 /*
 """
 def pressedA():
@@ -60,10 +57,9 @@ input.on_button_pressed(Button.A, pressedA)
 
 """
 /*
-* Lorsque le bouton B est appuyé
+* When the B button is pressed, pause the game
 /*
 """
 def pressedB():
     game.pause()
-    game.resume()
 input.on_button_pressed(Button.B, pressedB)
