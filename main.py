@@ -1,14 +1,19 @@
-#//Variables
+#Variables
 sprite = game.create_sprite(2, 2)
 life = 5
 isDead = False
-ennemyLocation = randint(0, 4)
+ennemy = game.create_sprite(randint(0, 4), randint(0, 4))
 game.set_life(5)
+shouldMove = True
+paused = game.is_paused()
 
 def on_forever():    
-    
-    if sprite.is_touching_edge():
+    """
+    When an ennemy is touched, reset everything, remove a life and show remaining life, play a note and show a X
+    """
+    if sprite.is_touching(ennemy):
         basic.show_number(game.life())
+        music.play_tone(Note.B3, music.beat())
         sprite.set_x(2)
         sprite.set_y(2)
         game.remove_life(1)
@@ -19,7 +24,6 @@ def on_forever():
         . # . # .
         # . . . #
         """)
-
     if game.is_game_over():
         basic.clear_screen()
         basic.show_string("A+B to restart")
@@ -46,24 +50,36 @@ def on_gesture_shake():
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
 """
-When the A button is pressed, check if the game is paused, if it's not then move
-"""
-def pressedA():
-    if game.is_paused():
-        sprite.move(0)
-    else:
-        sprite.move(1)
-input.on_button_pressed(Button.A, pressedA)
-
-"""
 When the B button is pressed, pause the game
 """
 def pressedB():
-    game.pause()
+    paused = not game.is_paused()
+
+    if paused:
+        shouldMove = False
+    else:
+        shouldMove = True
 input.on_button_pressed(Button.B, pressedB)
 
+"""
+When the A button is pressed, check if the game is paused, if it's not then move
+Creates an ennemy at a random location between 0 and 4 (row and colums)
+
+Everytime the player moves, the ennemy do the same in a random direction
+"""
+def pressedA():
+    if not shouldMove:
+        sprite.move(0)
+    else:
+        sprite.move(1)
+        ennemy.set_direction(randint(0, 360))
+        ennemy.move(1)
+input.on_button_pressed(Button.A, pressedA)
+
+"""
+If the game is over, restart another one
+"""
 def pressedAandB():
     if game.is_game_over():
         game.set_life(5)
-        isDead = False
 input.on_button_pressed(Button.AB, pressedAandB)
